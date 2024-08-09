@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from 'express'
+import express from 'express'
 import { MainCategoriesControllers } from './categories.main.controller'
 import validateRequest from '../../middlewares/validateRequest'
 import { MainCategoriesValidation } from './categories.main.validation'

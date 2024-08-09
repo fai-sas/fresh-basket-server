@@ -70,10 +70,10 @@ const updateMainCategoriesIntoDb = async (
     )
   }
 
-  const { image, ...remainingStudentData } = payload
+  const { image, ...remainingMainCategoryData } = payload
 
   const modifiedUpdatedData: Record<string, unknown> = {
-    ...remainingStudentData,
+    ...remainingMainCategoryData,
   }
 
   if (image && Object.keys(image).length) {
@@ -96,9 +96,9 @@ const updateMainCategoriesIntoDb = async (
 }
 
 const deleteMainCategoriesFromDb = async (id: string) => {
-  const isCarExists = await MainCategories.findById(id)
+  const isMainCategoryExists = await MainCategories.findById(id)
 
-  if (!isCarExists) {
+  if (!isMainCategoryExists) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Requested Main Category Not Found'

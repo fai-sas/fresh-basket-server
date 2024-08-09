@@ -67,8 +67,8 @@ const updateMainCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, vo
     if (!isMainCategoryExists) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Main Category Not Found');
     }
-    const { image } = payload, remainingStudentData = __rest(payload, ["image"]);
-    const modifiedUpdatedData = Object.assign({}, remainingStudentData);
+    const { image } = payload, remainingMainCategoryData = __rest(payload, ["image"]);
+    const modifiedUpdatedData = Object.assign({}, remainingMainCategoryData);
     if (image && Object.keys(image).length) {
         for (const [key, value] of Object.entries(image)) {
             modifiedUpdatedData[`image.${key}`] = value;
@@ -81,8 +81,8 @@ const updateMainCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, vo
     return result;
 });
 const deleteMainCategoriesFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const isCarExists = yield categories_main_model_1.MainCategories.findById(id);
-    if (!isCarExists) {
+    const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(id);
+    if (!isMainCategoryExists) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Main Category Not Found');
     }
     const result = yield categories_main_model_1.MainCategories.findByIdAndUpdate(id, { isDeleted: true }, {

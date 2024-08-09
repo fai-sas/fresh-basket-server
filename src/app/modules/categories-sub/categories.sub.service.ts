@@ -60,6 +60,14 @@ const updateSubCategoriesIntoDb = async (
   id: string,
   payload: Partial<TSubCategory>
 ) => {
+  const isMainCategoryExists = await MainCategories.findById(
+    payload?.mainCategory
+  )
+
+  if (!isMainCategoryExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
+  }
+
   const existingCategory = await SubCategories.isSubCategoryExists(
     payload?.name as string
   )
@@ -96,7 +104,7 @@ const updateSubCategoriesIntoDb = async (
     }
   )
 
-  return result
+  return result?.populate('mainCategory')
 }
 
 const deleteSubCategoriesFromDb = async (id: string) => {

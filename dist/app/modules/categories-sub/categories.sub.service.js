@@ -64,6 +64,10 @@ const getSingleSubCategoriesFromDb = (id) => __awaiter(void 0, void 0, void 0, f
     return result.populate('mainCategory');
 });
 const updateSubCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
+    const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload === null || payload === void 0 ? void 0 : payload.mainCategory);
+    if (!isMainCategoryExists) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
+    }
     const existingCategory = yield categories_sub_model_1.SubCategories.isSubCategoryExists(payload === null || payload === void 0 ? void 0 : payload.name);
     if (existingCategory) {
         throw new Error('Sub Category already exists');
@@ -83,7 +87,7 @@ const updateSubCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, voi
         new: true,
         runValidators: true,
     });
-    return result;
+    return result === null || result === void 0 ? void 0 : result.populate('mainCategory');
 });
 const deleteSubCategoriesFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(id);

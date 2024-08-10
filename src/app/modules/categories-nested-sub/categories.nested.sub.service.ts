@@ -30,10 +30,7 @@ const createNestedSubCategoriesIntoDb = async (payload: TNestedSubCategory) => {
 const getAllNestedSubCategoriesIntoDb = async (
   query: Record<string, unknown>
 ) => {
-  const subCategoriesQuery = new QueryBuilder(
-    NestedSubCategories.find().populate('mainCategory'),
-    query
-  )
+  const subCategoriesQuery = new QueryBuilder(NestedSubCategories.find(), query)
     .search(NestedSubCategoriesSearchableFields)
     .filter()
     .sort()
@@ -56,7 +53,7 @@ const getSingleNestedSubCategoriesFromDb = async (id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Requested Sub Category Not Found')
   }
 
-  return result.populate('mainCategory')
+  return result
 }
 
 const updateNestedSubCategoriesIntoDb = async (
@@ -108,7 +105,7 @@ const updateNestedSubCategoriesIntoDb = async (
     }
   )
 
-  return result?.populate('mainCategory')
+  return result
 }
 
 const deleteNestedSubCategoriesFromDb = async (id: string) => {

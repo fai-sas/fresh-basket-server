@@ -43,7 +43,7 @@ const createNestedSubCategoriesIntoDb = (payload) => __awaiter(void 0, void 0, v
     return result.populate('mainCategory');
 });
 const getAllNestedSubCategoriesIntoDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const subCategoriesQuery = new QueryBuilder_1.default(categories_nested_sub_model_1.NestedSubCategories.find().populate('mainCategory'), query)
+    const subCategoriesQuery = new QueryBuilder_1.default(categories_nested_sub_model_1.NestedSubCategories.find(), query)
         .search(categories_nested_sub_constants_1.NestedSubCategoriesSearchableFields)
         .filter()
         .sort()
@@ -61,7 +61,7 @@ const getSingleNestedSubCategoriesFromDb = (id) => __awaiter(void 0, void 0, voi
     if (!result) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Sub Category Not Found');
     }
-    return result.populate('mainCategory');
+    return result;
 });
 const updateNestedSubCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(payload === null || payload === void 0 ? void 0 : payload.subCategory);
@@ -87,7 +87,7 @@ const updateNestedSubCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 
         new: true,
         runValidators: true,
     });
-    return result === null || result === void 0 ? void 0 : result.populate('mainCategory');
+    return result;
 });
 const deleteNestedSubCategoriesFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const isNestedSubCategoryExists = yield categories_nested_sub_model_1.NestedSubCategories.findById(id);

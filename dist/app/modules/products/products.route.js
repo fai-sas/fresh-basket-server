@@ -12,6 +12,6 @@ const router = express_1.default.Router();
 router.post('/create-product', (0, validateRequest_1.default)(products_validation_1.ProductsValidation.createProductsValidationSchema), products_controller_1.ProductsControllers.createProduct);
 router.get('/', products_controller_1.ProductsControllers.getAllProducts);
 router.get('/:id', products_controller_1.ProductsControllers.getSingleProduct);
-router.put('/:id', (0, validateRequest_1.default)(products_validation_1.ProductsValidation.createProductsValidationSchema), products_controller_1.ProductsControllers.updateProduct);
+router.put('/:id', (0, validateRequest_1.default)(products_validation_1.ProductsValidation.updateProductsValidationSchema), products_controller_1.ProductsControllers.updateProduct);
 router.delete('/:id', products_controller_1.ProductsControllers.deleteProduct);
 exports.ProductsRoutes = router;

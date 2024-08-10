@@ -30,27 +30,39 @@ const products_constants_1 = require("./products.constants");
 const products_model_1 = require("./products.model");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const categories_main_model_1 = require("../categories-main/categories.main.model");
+const categories_sub_model_1 = require("../categories-sub/categories.sub.model");
+const categories_nested_sub_model_1 = require("../categories-nested-sub/categories.nested.sub.model");
 const createProductsIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload === null || payload === void 0 ? void 0 : payload.mainCategory);
     if (!isMainCategoryExists) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
     }
-    const existingCategory = yield products_model_1.Products.isProductExists(payload.name);
-    if (existingCategory) {
-        throw new Error('Sub Category already exists');
+    const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(payload === null || payload === void 0 ? void 0 : payload.subCategory);
+    if (!isSubCategoryExists) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Sub Category Not Found');
+    }
+    if (payload.nestedSubCategory) {
+        const isNestedSubCategoryExists = yield categories_nested_sub_model_1.NestedSubCategories.findById(payload.nestedSubCategory);
+        if (!isNestedSubCategoryExists) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Nested Sub Category Not Found');
+        }
+    }
+    const existingProduct = yield products_model_1.Products.isProductExists(payload.name);
+    if (existingProduct) {
+        throw new Error('Product already exists');
     }
     const result = (yield products_model_1.Products.create(payload)).populate('mainCategory');
     return result;
 });
 const getAllProductsFromDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
-    const subCategoriesQuery = new QueryBuilder_1.default(products_model_1.Products.find().populate('mainCategory'), query)
+    const productsQuery = new QueryBuilder_1.default(products_model_1.Products.find().populate('mainCategory'), query)
         .search(products_constants_1.ProductsSearchableFields)
         .filter()
         .sort()
         .paginate()
         .fields();
-    const meta = yield subCategoriesQuery.countTotal();
-    const result = yield subCategoriesQuery.modelQuery;
+    const meta = yield productsQuery.countTotal();
+    const result = yield productsQuery.modelQuery;
     return {
         meta,
         result,
@@ -59,22 +71,32 @@ const getAllProductsFromDb = (query) => __awaiter(void 0, void 0, void 0, functi
 const getSingleProductFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield products_model_1.Products.findById(id);
     if (!result) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Sub Category Not Found');
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Product Not Found');
     }
     return result.populate('mainCategory');
 });
 const updateProductsIntoDb = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload === null || payload === void 0 ? void 0 : payload.mainCategory);
-    if (!isMainCategoryExists) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
+    if (payload.mainCategory) {
+        const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload.mainCategory);
+        if (!isMainCategoryExists) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
+        }
     }
-    const existingCategory = yield products_model_1.Products.isProductExists(payload === null || payload === void 0 ? void 0 : payload.name);
-    if (existingCategory) {
-        throw new Error('Sub Category already exists');
+    if (payload.subCategory) {
+        const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(payload.subCategory);
+        if (!isSubCategoryExists) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Sub Category Not Found');
+        }
     }
-    const isSubCategoryExists = yield products_model_1.Products.findById(id);
-    if (!isSubCategoryExists) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Sub Category Not Found');
+    if (payload.nestedSubCategory) {
+        const isNestedSubCategoryExists = yield categories_nested_sub_model_1.NestedSubCategories.findById(payload.nestedSubCategory);
+        if (!isNestedSubCategoryExists) {
+            throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Nested Sub Category Not Found');
+        }
+    }
+    const existingProduct = yield products_model_1.Products.isProductExists(payload === null || payload === void 0 ? void 0 : payload.name);
+    if (existingProduct) {
+        throw new Error('Product already exists');
     }
     const { image } = payload, remainingSubCategoryData = __rest(payload, ["image"]);
     const modifiedUpdatedData = Object.assign({}, remainingSubCategoryData);
@@ -90,9 +112,9 @@ const updateProductsIntoDb = (id, payload) => __awaiter(void 0, void 0, void 0, 
     return result === null || result === void 0 ? void 0 : result.populate('mainCategory');
 });
 const deleteProductsFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const isSubCategoryExists = yield products_model_1.Products.findById(id);
-    if (!isSubCategoryExists) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Requested Sub Category Not Found');
+    const isProductExists = yield products_model_1.Products.findById(id);
+    if (!isProductExists) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Product Not Found');
     }
     const result = yield products_model_1.Products.findByIdAndUpdate(id, { isDeleted: true }, {
         new: true,

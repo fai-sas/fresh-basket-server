@@ -30,11 +30,9 @@ const createNestedSubCategoriesIntoDb = async (payload: TNestedSubCategory) => {
     throw new Error('Nested Sub Category already exists')
   }
 
-  const result = (await NestedSubCategories.create(payload)).populate(
-    'mainCategory'
-  )
+  const result = await NestedSubCategories.create(payload)
 
-  return result
+  return result.populate('mainCategory')
 }
 
 const getAllNestedSubCategoriesIntoDb = async (

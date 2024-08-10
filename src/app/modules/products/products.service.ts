@@ -5,6 +5,8 @@ import { TProducts } from './products.interface'
 import { Products } from './products.model'
 import AppError from '../../errors/AppError'
 import { MainCategories } from '../categories-main/categories.main.model'
+import { SubCategories } from '../categories-sub/categories.sub.model'
+import { NestedSubCategories } from '../categories-nested-sub/categories.nested.sub.model'
 
 const createProductsIntoDb = async (payload: TProducts) => {
   const isMainCategoryExists = await MainCategories.findById(
@@ -15,10 +17,28 @@ const createProductsIntoDb = async (payload: TProducts) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
   }
 
-  const existingCategory = await Products.isProductExists(payload.name)
+  const isSubCategoryExists = await SubCategories.findById(payload?.subCategory)
 
-  if (existingCategory) {
-    throw new Error('Sub Category already exists')
+  if (!isSubCategoryExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Sub Category Not Found')
+  }
+
+  if (payload.nestedSubCategory) {
+    const isNestedSubCategoryExists = await NestedSubCategories.findById(
+      payload.nestedSubCategory
+    )
+    if (!isNestedSubCategoryExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Requested Nested Sub Category Not Found'
+      )
+    }
+  }
+
+  const existingProduct = await Products.isProductExists(payload.name)
+
+  if (existingProduct) {
+    throw new Error('Product already exists')
   }
 
   const result = (await Products.create(payload)).populate('mainCategory')
@@ -27,7 +47,7 @@ const createProductsIntoDb = async (payload: TProducts) => {
 }
 
 const getAllProductsFromDb = async (query: Record<string, unknown>) => {
-  const subCategoriesQuery = new QueryBuilder(
+  const productsQuery = new QueryBuilder(
     Products.find().populate('mainCategory'),
     query
   )
@@ -37,8 +57,8 @@ const getAllProductsFromDb = async (query: Record<string, unknown>) => {
     .paginate()
     .fields()
 
-  const meta = await subCategoriesQuery.countTotal()
-  const result = await subCategoriesQuery.modelQuery
+  const meta = await productsQuery.countTotal()
+  const result = await productsQuery.modelQuery
 
   return {
     meta,
@@ -50,7 +70,7 @@ const getSingleProductFromDb = async (id: string) => {
   const result = await Products.findById(id)
 
   if (!result) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Requested Sub Category Not Found')
+    throw new AppError(httpStatus.NOT_FOUND, 'Requested Product Not Found')
   }
 
   return result.populate('mainCategory')
@@ -60,26 +80,45 @@ const updateProductsIntoDb = async (
   id: string,
   payload: Partial<TProducts>
 ) => {
-  const isMainCategoryExists = await MainCategories.findById(
-    payload?.mainCategory
-  )
-
-  if (!isMainCategoryExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
+  if (payload.mainCategory) {
+    const isMainCategoryExists = await MainCategories.findById(
+      payload.mainCategory
+    )
+    if (!isMainCategoryExists) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
+    }
   }
 
-  const existingCategory = await Products.isProductExists(
+  if (payload.subCategory) {
+    const isSubCategoryExists = await SubCategories.findById(
+      payload.subCategory
+    )
+    if (!isSubCategoryExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Requested Sub Category Not Found'
+      )
+    }
+  }
+
+  if (payload.nestedSubCategory) {
+    const isNestedSubCategoryExists = await NestedSubCategories.findById(
+      payload.nestedSubCategory
+    )
+    if (!isNestedSubCategoryExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Requested Nested Sub Category Not Found'
+      )
+    }
+  }
+
+  const existingProduct = await Products.isProductExists(
     payload?.name as string
   )
 
-  if (existingCategory) {
-    throw new Error('Sub Category already exists')
-  }
-
-  const isSubCategoryExists = await Products.findById(id)
-
-  if (!isSubCategoryExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Requested Sub Category Not Found')
+  if (existingProduct) {
+    throw new Error('Product already exists')
   }
 
   const { image, ...remainingSubCategoryData } = payload
@@ -94,24 +133,19 @@ const updateProductsIntoDb = async (
     }
   }
 
-  const result = await Products.findByIdAndUpdate(
-    id,
-    modifiedUpdatedData,
-
-    {
-      new: true,
-      runValidators: true,
-    }
-  )
+  const result = await Products.findByIdAndUpdate(id, modifiedUpdatedData, {
+    new: true,
+    runValidators: true,
+  })
 
   return result?.populate('mainCategory')
 }
 
 const deleteProductsFromDb = async (id: string) => {
-  const isSubCategoryExists = await Products.findById(id)
+  const isProductExists = await Products.findById(id)
 
-  if (!isSubCategoryExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Requested Sub Category Not Found')
+  if (!isProductExists) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product Not Found')
   }
 
   const result = await Products.findByIdAndUpdate(

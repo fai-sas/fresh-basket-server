@@ -21,9 +21,9 @@ const createSubCategoriesIntoDb = async (payload: TSubCategory) => {
     throw new Error('Sub Category already exists')
   }
 
-  const result = (await SubCategories.create(payload)).populate('mainCategory')
+  const result = await SubCategories.create(payload)
 
-  return result
+  return result.populate('mainCategory')
 }
 
 const getAllSubCategoriesIntoDb = async (query: Record<string, unknown>) => {

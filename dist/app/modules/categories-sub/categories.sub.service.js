@@ -39,8 +39,8 @@ const createSubCategoriesIntoDb = (payload) => __awaiter(void 0, void 0, void 0,
     if (existingCategory) {
         throw new Error('Sub Category already exists');
     }
-    const result = (yield categories_sub_model_1.SubCategories.create(payload)).populate('mainCategory');
-    return result;
+    const result = yield categories_sub_model_1.SubCategories.create(payload);
+    return result.populate('mainCategory');
 });
 const getAllSubCategoriesIntoDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const subCategoriesQuery = new QueryBuilder_1.default(categories_sub_model_1.SubCategories.find().populate('mainCategory'), query)

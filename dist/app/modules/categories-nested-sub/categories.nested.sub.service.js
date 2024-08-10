@@ -44,8 +44,8 @@ const createNestedSubCategoriesIntoDb = (payload) => __awaiter(void 0, void 0, v
     if (existingCategory) {
         throw new Error('Nested Sub Category already exists');
     }
-    const result = (yield categories_nested_sub_model_1.NestedSubCategories.create(payload)).populate('mainCategory');
-    return result;
+    const result = yield categories_nested_sub_model_1.NestedSubCategories.create(payload);
+    return result.populate('mainCategory');
 });
 const getAllNestedSubCategoriesIntoDb = (query) => __awaiter(void 0, void 0, void 0, function* () {
     const subCategoriesQuery = new QueryBuilder_1.default(categories_nested_sub_model_1.NestedSubCategories.find().populate('mainCategory'), query)

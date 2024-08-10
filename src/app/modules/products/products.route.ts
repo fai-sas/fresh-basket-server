@@ -17,7 +17,7 @@ router.get('/:id', ProductsControllers.getSingleProduct)
 
 router.put(
   '/:id',
-  validateRequest(ProductsValidation.createProductsValidationSchema),
+  validateRequest(ProductsValidation.updateProductsValidationSchema),
   ProductsControllers.updateProduct
 )
 

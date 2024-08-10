@@ -1,0 +1,1 @@
+export const NestedSubCategoriesSearchableFields = ['name']

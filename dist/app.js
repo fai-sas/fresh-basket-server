@@ -17,7 +17,7 @@ app.use((0, cookie_parser_1.default)());
 // application routes
 app.use('/api/v1', routes_1.default);
 app.get('/', (req, res) => {
-    res.send('Welcome to Node Mongoose Starter Pack');
+    res.send('Welcome to My Fresh Basket Server');
 });
 app.use(globalErrorhandler_1.default);
 app.use(notFound_1.default);

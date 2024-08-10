@@ -16,7 +16,7 @@ app.use(cookieParser())
 app.use('/api/v1', router)
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Node Mongoose Starter Pack')
+  res.send('Welcome to My Fresh Basket Server')
 })
 
 app.use(globalErrorHandler)

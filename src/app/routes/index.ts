@@ -3,6 +3,7 @@ import { UserRoutes } from '../modules/user/user.route'
 import { MainCategoriesRoutes } from '../modules/categories-main/categories.main.route'
 import { SubCategoriesRoutes } from '../modules/categories-sub/categories.sub.route'
 import { NestedSubCategoriesRoutes } from '../modules/categories-nested-sub/categories.nested.sub.route'
+import { ProductsRoutes } from '../modules/products/products.route'
 
 const router = Router()
 
@@ -22,6 +23,10 @@ const moduleRoutes = [
   {
     path: '/nested-sub-categories',
     routes: NestedSubCategoriesRoutes,
+  },
+  {
+    path: '/products',
+    routes: ProductsRoutes,
   },
 ]
 

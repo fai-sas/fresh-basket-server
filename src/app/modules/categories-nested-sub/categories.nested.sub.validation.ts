@@ -6,6 +6,11 @@ const createNestedSubCategoriesValidationSchema = z.object({
     image: z
       .array(z.string().url())
       .min(1, { message: 'Nested sub category image is required' }),
+    subCategory: z
+      .string({ required_error: 'Subcategory is required' })
+      .refine((value) => value.match(/^[a-fA-F0-9]{24}$/), {
+        message: 'Invalid subcategory ID',
+      }),
     isDeleted: z.boolean().default(false),
   }),
 })
@@ -16,6 +21,12 @@ const updateNestedSubCategoriesValidationSchema = z.object({
     image: z
       .array(z.string().url())
       .min(1, { message: 'Nested sub category image is required' })
+      .optional(),
+    subCategory: z
+      .string({ required_error: 'Subcategory is required' })
+      .refine((value) => value.match(/^[a-fA-F0-9]{24}$/), {
+        message: 'Invalid subcategory ID',
+      })
       .optional(),
     isDeleted: z.boolean().default(false).optional(),
   }),

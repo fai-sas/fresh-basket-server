@@ -3,7 +3,6 @@ import { Model, Schema } from 'mongoose'
 export interface TNestedSubCategory {
   name: string
   image: string[]
-  mainCategory: Schema.Types.ObjectId
   subCategory: Schema.Types.ObjectId
   isDeleted: boolean
 }

@@ -29,13 +29,8 @@ const QueryBuilder_1 = __importDefault(require("../../builder/QueryBuilder"));
 const categories_nested_sub_constants_1 = require("./categories.nested.sub.constants");
 const categories_nested_sub_model_1 = require("./categories.nested.sub.model");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
-const categories_main_model_1 = require("../categories-main/categories.main.model");
 const categories_sub_model_1 = require("../categories-sub/categories.sub.model");
 const createNestedSubCategoriesIntoDb = (payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload === null || payload === void 0 ? void 0 : payload.mainCategory);
-    if (!isMainCategoryExists) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
-    }
     const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(payload === null || payload === void 0 ? void 0 : payload.subCategory);
     if (!isSubCategoryExists) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Sub Category Not Found');
@@ -69,10 +64,6 @@ const getSingleNestedSubCategoriesFromDb = (id) => __awaiter(void 0, void 0, voi
     return result.populate('mainCategory');
 });
 const updateNestedSubCategoriesIntoDb = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
-    const isMainCategoryExists = yield categories_main_model_1.MainCategories.findById(payload === null || payload === void 0 ? void 0 : payload.mainCategory);
-    if (!isMainCategoryExists) {
-        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Main Category Not Found');
-    }
     const isSubCategoryExists = yield categories_sub_model_1.SubCategories.findById(payload === null || payload === void 0 ? void 0 : payload.subCategory);
     if (!isSubCategoryExists) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Sub Category Not Found');

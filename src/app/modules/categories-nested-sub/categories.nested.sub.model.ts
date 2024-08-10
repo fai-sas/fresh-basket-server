@@ -17,11 +17,6 @@ const nestedSubCategoriesSchema = new Schema<
       type: [String],
       required: [true, 'Please provide category image'],
     },
-    mainCategory: {
-      type: Schema.Types.ObjectId,
-      ref: 'MainCategories',
-      required: [true, 'Main category is required'],
-    },
     subCategory: {
       type: Schema.Types.ObjectId,
       ref: 'SubCategories',

@@ -25,9 +25,9 @@ const updateSubCategoriesValidationSchema = zod_1.z.object({
             .optional(),
         mainCategory: zod_1.z
             .string({ required_error: 'Main category is required' })
-            .refine((value) => value.match(/^[a-fA-F0-9]{24}$/), {
-            message: 'Invalid subcategory ID',
-        })
+            // .refine((value) => value.match(/^[a-fA-F0-9]{24}$/), {
+            //   message: 'Invalid subcategory ID',
+            // })
             .optional(),
         isDeleted: zod_1.z.boolean().default(false).optional(),
     }),

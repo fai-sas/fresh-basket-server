@@ -8,14 +8,6 @@ import { MainCategories } from '../categories-main/categories.main.model'
 import { SubCategories } from '../categories-sub/categories.sub.model'
 
 const createNestedSubCategoriesIntoDb = async (payload: TNestedSubCategory) => {
-  const isMainCategoryExists = await MainCategories.findById(
-    payload?.mainCategory
-  )
-
-  if (!isMainCategoryExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
-  }
-
   const isSubCategoryExists = await SubCategories.findById(payload?.subCategory)
 
   if (!isSubCategoryExists) {
@@ -71,14 +63,6 @@ const updateNestedSubCategoriesIntoDb = async (
   id: string,
   payload: Partial<TNestedSubCategory>
 ) => {
-  const isMainCategoryExists = await MainCategories.findById(
-    payload?.mainCategory
-  )
-
-  if (!isMainCategoryExists) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Main Category Not Found')
-  }
-
   const isSubCategoryExists = await SubCategories.findById(payload?.subCategory)
 
   if (!isSubCategoryExists) {

@@ -20,11 +20,6 @@ const nestedSubCategoriesSchema = new mongoose_1.Schema({
         type: [String],
         required: [true, 'Please provide category image'],
     },
-    mainCategory: {
-        type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'MainCategories',
-        required: [true, 'Main category is required'],
-    },
     subCategory: {
         type: mongoose_1.Schema.Types.ObjectId,
         ref: 'SubCategories',
